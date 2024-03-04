@@ -296,6 +296,40 @@ class Authentication extends User
         return $this->json(200, "登录成功");
     }
 
+    public function login4gpthub(): array
+    {
+        hook(\App\Consts\Hook::USER_API_AUTH_LOGIN_BEGIN);
+
+        if (!isset($_POST['username'])) {
+            throw new JSONException("用户名输入错误");
+        }
+ 
+        //验证密码
+        if (!isset($_POST['password']) || !Validation::password((string)$_POST['password'])) {
+            throw new JSONException("密码错误");
+        }
+
+        $user = \App\Model\User::query()->where("username", $_POST['username'])->first()
+            ?? \App\Model\User::query()->where("email", $_POST['username'])->first()
+            ?? \App\Model\User::query()->where("phone", $_POST['username'])->first();
+
+        if (!$user) {
+            throw new JSONException("用户不存在");
+        }
+
+        if (Str::generatePassword($_POST['password'], $user->salt) != $user->password) {
+            throw new JSONException("密码错误");
+        }
+
+        if ($user->status == 0) {
+            throw new JSONException("您已被封禁");
+        }
+
+        $this->sso->loginSuccess($user);
+
+        return $this->json(200, "登录成功");
+    }
+
     /**
      * @throws \Kernel\Exception\JSONException
      */
