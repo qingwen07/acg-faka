@@ -618,7 +618,8 @@
                 //     }
                 // });
                 // 直接跳转购买记录
-                window.open('/user/personal/purchaseRecord?tradeNo=' + res.tradeNo);
+                // window.open('/user/personal/purchaseRecord?tradeNo=' + res.tradeNo);
+                window.location.href = '/user/personal/purchaseRecord?tradeNo=' + res.tradeNo;
             }
         }, () => {
             captchaImage();
