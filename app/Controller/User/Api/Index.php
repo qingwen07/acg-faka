@@ -49,10 +49,9 @@ class Index extends User
      */
     public function data(): array
     {
-        $user = $this->getUser();
         $category = $this->shop->getCategory($this->getUserGroup());
         hook(\App\Consts\Hook::USER_API_INDEX_CATEGORY_LIST, $category);
-        return $this->json(200, "success", $user);
+        return $this->json(200, "success", $category);
     }
 
     public function userinfo(): array
@@ -160,6 +159,7 @@ class Index extends User
 
 
         $user = $this->getUser();
+        var_dump($user);
         $userGroup = $this->getUserGroup();
         //取得分类
         $category = $this->shop->getCategory($userGroup);
