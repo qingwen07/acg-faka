@@ -54,6 +54,11 @@ class Index extends User
         return $this->json(200, "success", $category);
     }
 
+    public function userinfo(): array
+    {
+        return $this->json(200, "success", $this->getUser());
+    }
+
     /**
      * @param int $categoryId
      * @return array
