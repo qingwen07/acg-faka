@@ -56,7 +56,8 @@ class Index extends User
 
     public function userinfo(): array
     {
-        return $this->json(200, "success", $this->getUser());
+        $user = $this->getUser();
+        return $this->json(200, "success", $user);
     }
 
     /**
