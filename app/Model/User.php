@@ -33,6 +33,8 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $nicename
  * @property string $alipay
  * @property string $wechat
+ * @property string $gpt_done_date
+ * @property int $gpt_suanzi_count
  */
 class User extends Model
 {

@@ -556,6 +556,18 @@ class OrderService implements Order
                     $order->save();//先将订单保存下来
                     $secret = $this->orderSuccess($order); //提交订单并且获取到卡密信息
                 } else {
+                    if ($owner == 0) {
+                        throw new JSONException("您未登录，请先登录后再支付");
+                    }
+                    $session = User::query()->find($owner);
+                    if (!$session) {
+                        throw new JSONException("用户不存在");
+                    }
+
+                    if ($session->status != 1) {
+                        throw new JSONException("You have been banned");
+                    }
+
                     //开始进行远程下单
                     $class = "\\App\\Pay\\{$pay->handle}\\Impl\\Pay";
                     if (!class_exists($class)) {
@@ -615,8 +627,24 @@ class OrderService implements Order
                 }
             }
 
-
             $order->save();
+
+            // 更新用户的GPT服务到期时间和算子数量
+            $user = User::query()->find($owner);
+            if (empty($user->gpt_done_date)) {
+                $user->gpt_done_date = date('Y-m-d H:i:s', strtotime("+" . $secret . " days"));
+            } else {
+                $user->gpt_done_date = date('Y-m-d H:i:s', strtotime("+" . $secret . " days", $user->gpt_done_date));
+            }
+
+            if ($secret == "3") { //如果是3天试用的，则算子加1000
+                $user->gpt_suanzi_count = $user->gpt_suanzi_count + 1000;
+            } else if ($secret == "31") {
+                $user->gpt_suanzi_count = $user->gpt_suanzi_count + 10000;
+            } else if ($secret == "100") {
+                $user->gpt_suanzi_count = $user->gpt_suanzi_count + 30000;
+            }
+            $user->save();  
 
             hook(\App\Consts\Hook::USER_API_ORDER_TRADE_AFTER, $commodity, $order, $pay);
             return ['url' => $url, 'amount' => $order->amount, 'tradeNo' => $order->trade_no, 'secret' => $secret];
