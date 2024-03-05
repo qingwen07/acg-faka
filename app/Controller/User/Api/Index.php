@@ -54,12 +54,6 @@ class Index extends User
         return $this->json(200, "success", $category);
     }
 
-    public function userinfo(): array
-    {
-        $user = $this->getUser();
-        return $this->json(200, "success", $user);
-    }
-
     /**
      * @param int $categoryId
      * @return array
@@ -159,7 +153,6 @@ class Index extends User
 
 
         $user = $this->getUser();
-        var_dump($user);
         $userGroup = $this->getUserGroup();
         //取得分类
         $category = $this->shop->getCategory($userGroup);

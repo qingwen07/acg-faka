@@ -18,6 +18,6 @@ class Gpthub extends User
 {
     public function userinfo(): array 
     {
-        return $this->json(200, "success", $this->getUser());
+        return $this->json(200, "success", $this->getUser()->toArray());
     }
 }
