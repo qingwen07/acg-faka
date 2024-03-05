@@ -88,4 +88,9 @@ class Str
             3 => mt_rand(1000000, 99999999)
         };
     }
+
+    public static function startsWith($string, $prefix): bool
+    {
+        return substr($string, 0, strlen($prefix)) === $prefix;
+    }
 }
