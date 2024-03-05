@@ -49,9 +49,10 @@ class Index extends User
      */
     public function data(): array
     {
+        $user = $this->getUser();
         $category = $this->shop->getCategory($this->getUserGroup());
         hook(\App\Consts\Hook::USER_API_INDEX_CATEGORY_LIST, $category);
-        return $this->json(200, "success", $category);
+        return $this->json(200, "success", $user);
     }
 
     public function userinfo(): array
