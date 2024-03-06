@@ -27,11 +27,11 @@ class Gpthub extends User
             $model = $_POST['model'];
             $token_cnt = intval($_POST['token_cnt']);
             if (str_starts_with($model, 'gpt-3')) {
-                $token_cnt = intdiv($token_cnt, 200);
+                $token_cnt = ceil($token_cnt / 200);
             } else if (str_starts_with($model, 'gpt-4')) {
-                $token_cnt = intdiv($token_cnt, 15);
+                $token_cnt = ceil($token_cnt / 15);
             } else {    //其他模型暂时也按照gpt3.5的比率来算
-                $token_cnt = intdiv($token_cnt, 200);
+                $token_cnt = ceil($token_cnt / 200);
             }
             
             $user = $this->getUser();
