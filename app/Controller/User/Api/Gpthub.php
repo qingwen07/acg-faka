@@ -25,7 +25,7 @@ class Gpthub extends User
     {
         if (isset($_POST['model']) && isset($_POST['token_cnt'])) {
             $model = $_POST['model'];
-            $token_cnt = $_POST['token_cnt'];
+            $token_cnt = intval($_POST['token_cnt']);
             if (str_starts_with($model, 'gpt-3')) {
                 $token_cnt = intdiv($token_cnt, 200);
             } else if (str_starts_with($model, 'gpt-4')) {
