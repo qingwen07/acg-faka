@@ -20,4 +20,26 @@ class Gpthub extends User
     {
         return $this->json(200, "success", $this->getUser()->toArray());
     }
+
+    public function decSuanziCount(): array
+    {
+        if (isset($_POST['model']) && isset($_POST['token_cnt'])) {
+            $model = $_POST['model'];
+            $token_cnt = $_POST['token_cnt'];
+            if (str_starts_with($model, 'gpt-3')) {
+                $token_cnt = intdiv($token_cnt, 200);
+            } else if (str_starts_with($model, 'gpt-4')) {
+                $token_cnt = intdiv($token_cnt, 15);
+            } else {    //其他模型暂时也按照gpt3.5的比率来算
+                $token_cnt = intdiv($token_cnt, 200);
+            }
+            
+            $user = $this->getUser();
+            $user->gpt_suanzi_count -= $token_cnt;
+            $user->save();
+        } else {
+            throw new JSONException("参数不正确");
+        }
+        return $this->json(200, 'success');
+    }
 }
