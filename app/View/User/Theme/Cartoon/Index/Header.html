@@ -34,7 +34,12 @@
                    #{if $user}<span style="position: relative;top: 4px;left: 3px;font-weight: bold;color: #1396558a;"> #{$user.username}  #{else} <span style="position: relative;top: 4px;left: 3px;font-weight: bold;color: #1396558a;">  #{$config.shop_name}  #{/if}
                </span></a>
                 #{if $user}
-               <a href="/user/dashboard/index"><span style="position: relative;top: 4px;left: 10px;font-size: 14px;font-weight: bold;color: #7be7bfd9;"><i class="fa fa-yen"></i>#{$user.balance}</span></a>
+               <a href="/user/dashboard/index"><span style="position: relative;top: 4px;left: 10px;font-size: 14px;font-weight: bold;color: #7be7bfd9;"><i class="fa fa-yen"></i>#{$user.balance}</span>
+                    <span style="position: relative;top: 4px;left: 10px;font-size: 14px;font-weight: bold;color: #7be7bfd9;">
+                        [剩余AI算子：#{$user.gpt_suanzi_count}]
+                        [服务到期：#{$user.gpt_done_date}]
+                    </span>
+                </a>
                #{else}  <a href="/user/authentication/login?goto=/"><span style="position: relative;top: 4px;left: 10px;font-size: 18px;color: #79b9fbbd;font-weight: bold;"><i class="fa fa-sign-in"></i> 登录</span></a> #{/if}
            </div>
             <div class="row">
