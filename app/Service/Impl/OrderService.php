@@ -643,7 +643,7 @@ class OrderService implements Order
             if (empty($user->gpt_done_date)) {
                 $user->gpt_done_date = date('Y-m-d H:i:s', strtotime("+" . $days . " days"));
             } else {
-                $user->gpt_done_date = date('Y-m-d H:i:s', strtotime("+" . $days . " days", $user->gpt_done_date));
+                $user->gpt_done_date = date('Y-m-d H:i:s', strtotime("+" . $days . " days", strtotime($user->gpt_done_date)));
             }
 
             if ($days == "3") { //如果是3天试用的，则算子加1000
