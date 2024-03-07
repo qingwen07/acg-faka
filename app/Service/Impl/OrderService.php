@@ -628,30 +628,33 @@ class OrderService implements Order
             }
 
             $order->save();
-
-            // 更新用户的GPT服务到期时间和算子数量
-            if (Str::startsWith($secret, "gpt-hub")) {
-                $user = User::query()->find($owner);
-                $days = str_replace("gpt-hub", "", $secret);
-                if (empty($user->gpt_done_date)) {
-                    $user->gpt_done_date = date('Y-m-d H:i:s', strtotime("+" . $days . " days"));
-                } else {
-                    $user->gpt_done_date = date('Y-m-d H:i:s', strtotime("+" . $days . " days", $user->gpt_done_date));
-                }
-
-                if ($days == "3") { //如果是3天试用的，则算子加1000
-                    $user->gpt_suanzi_count = $user->gpt_suanzi_count + 1000;
-                } else if ($days == "31") {
-                    $user->gpt_suanzi_count = $user->gpt_suanzi_count + 10000;
-                } else if ($days == "100") {
-                    $user->gpt_suanzi_count = $user->gpt_suanzi_count + 30000;
-                }
-                $user->save();  
-            }
             
             hook(\App\Consts\Hook::USER_API_ORDER_TRADE_AFTER, $commodity, $order, $pay);
             return ['url' => $url, 'amount' => $order->amount, 'tradeNo' => $order->trade_no, 'secret' => $secret];
         });
+    }
+
+    // 更新下单用户的GPT使用有效期和AI算子数量
+    public function updateUserGptDoneDate(int $orderOwner, string $secret)
+    {
+        if (!empty($secret) && Str::startsWith($secret, "gpt-hub")) {
+            $user = User::query()->find($orderOwner);
+            $days = str_replace("gpt-hub", "", $secret);
+            if (empty($user->gpt_done_date)) {
+                $user->gpt_done_date = date('Y-m-d H:i:s', strtotime("+" . $days . " days"));
+            } else {
+                $user->gpt_done_date = date('Y-m-d H:i:s', strtotime("+" . $days . " days", $user->gpt_done_date));
+            }
+
+            if ($days == "3") { //如果是3天试用的，则算子加1000
+                $user->gpt_suanzi_count = $user->gpt_suanzi_count + 1000;
+            } else if ($days == "31") {
+                $user->gpt_suanzi_count = $user->gpt_suanzi_count + 10000;
+            } else if ($days == "100") {
+                $user->gpt_suanzi_count = $user->gpt_suanzi_count + 30000;
+            }
+            $user->save();  
+        }
     }
 
 
@@ -808,6 +811,9 @@ class OrderService implements Order
                 }
             }
         }
+
+        // 更新用户的GPT服务到期时间和算子数量
+        $this->updateUserGptDoneDate($order->owner, $order->secret);
 
         $order->save();
 
