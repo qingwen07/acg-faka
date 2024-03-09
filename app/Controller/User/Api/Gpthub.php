@@ -19,7 +19,7 @@ class Gpthub extends User
     public function userinfo(): array 
     {
         $user = $this->getUser();
-        if (!$user) {
+        if (isset($user)) {
             return $this->json(200, "success", $this->getUser()->toArray());
         } else {
             return $this->json(400, "用户信息已过期，请重新登录");
