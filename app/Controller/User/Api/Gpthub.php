@@ -18,7 +18,13 @@ class Gpthub extends User
 {
     public function userinfo(): array 
     {
-        return $this->json(200, "success", $this->getUser()->toArray());
+        $user = $this->getUser();
+        if (!$user) {
+            return $this->json(200, "success", $this->getUser()->toArray());
+        } else {
+            return $this->json(400, "用户信息已过期，请重新登录");
+        }
+        
     }
 
     public function decSuanziCount(): array
@@ -31,7 +37,7 @@ class Gpthub extends User
             } else if (str_starts_with($model, 'gpt-4')) {
                 $token_cnt = ceil($token_cnt / 15);
             } else {    //其他模型暂时也按照gpt3.5的比率来算
-                $token_cnt = ceil($token_cnt / 200);
+                $token_cnt = intdiv($token_cnt, 200);
             }
             
             $user = $this->getUser();
