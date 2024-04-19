@@ -38,9 +38,27 @@ class Dify extends User
         } else {
             $json = $this->json(200, null, null);
         }
-        
-        
         return $json;
+    }
+
+    // 更新卡密的剩余次数，目前用note字段来填充剩余次数
+    public function decSaledSecretUsedCount(): array
+    {
+        $secret = trim(trim((string)$_POST['secret']), PHP_EOL);
+        $map['equal-secret'] = $secret;
+        $map['equal-status'] = 1;   //已经出售的
+        $queryTemplateEntity = new QueryTemplateEntity();
+        $queryTemplateEntity->setModel(\App\Model\Card::class);
+        $queryTemplateEntity->setLimit(1);
+        $queryTemplateEntity->setWhere($map);
+        $data = $this->query->findTemplateAll($queryTemplateEntity)->toArray();
+        if (count($data) > 0) {
+            $note = intval($data[0]['note']);
+            $note -= 1;
+            
+            \App\Model\Card::query()->whereIn('secret', $secret)->whereRaw("status=1")->update(['note' => strval($note)]);
+        } 
+        return $this->json(200, 'success');
     }
 
 
