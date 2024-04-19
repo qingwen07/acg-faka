@@ -22,7 +22,7 @@ class Dify extends User
     #[Inject]
     private Query $query;
 
-    public function getSecretInfo(): array
+    public function getSaledSecretInfo(): array
     {
         $secret = trim(trim((string)$_POST['secret']), PHP_EOL);
 
