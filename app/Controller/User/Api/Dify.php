@@ -56,9 +56,12 @@ class Dify extends User
             $note = intval($data[0]['note']);
             $note -= 1;
             
-            \App\Model\Card::query()->whereIn('secret', $secret)->whereRaw("status=1")->update(['note' => strval($note)]);
-        } 
-        return $this->json(200, 'success');
+            \App\Model\Card::query()->where('secret', $secret)->whereRaw("status=1")->update(['note' => strval($note)]);
+            return $this->json(200, 'success');
+        } else {
+            return $this->json(200, 'secret not found');
+        }
+        
     }
 
 
