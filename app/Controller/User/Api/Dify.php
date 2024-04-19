@@ -22,16 +22,19 @@ class Dify extends User
     #[Inject]
     private Query $query;
 
-    public function checkSecretIsValid(): array
+    public function getSecretInfo(): array
     {
         $secret = trim(trim((string)$_POST['secret']), PHP_EOL);
 
         $map['equal-secret'] = $secret;
+        $map['equal-status'] = 1;   //已经出售的
         $queryTemplateEntity = new QueryTemplateEntity();
         $queryTemplateEntity->setModel(\App\Model\Card::class);
+        $queryTemplateEntity->setLimit(1);
         $queryTemplateEntity->setWhere($map);
         $data = $this->query->findTemplateAll($queryTemplateEntity)->toArray();
-        $json = $this->json(200, null, $data['data']);
+        $json = $this->json(200, null, $data);
+        
         return $json;
     }
 
