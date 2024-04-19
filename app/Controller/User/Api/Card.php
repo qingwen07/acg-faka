@@ -156,6 +156,19 @@ class Card extends User
         return $this->json(200, '（＾∀＾）移除成功');
     }
 
+    public function checkSecretIsValid(): array
+    {
+        $secret = trim(trim((string)$_POST['secret']), PHP_EOL);
+
+        $map['equal-secret'] = $secret;
+        $queryTemplateEntity = new QueryTemplateEntity();
+        $queryTemplateEntity->setModel(\App\Model\Card::class);
+        $queryTemplateEntity->setWhere($map);
+        $data = $this->query->findTemplateAll($queryTemplateEntity)->toArray();
+        $json = $this->json(200, null, $data['data']);
+        return $json;
+    }
+
 
     /**
      * 导出
