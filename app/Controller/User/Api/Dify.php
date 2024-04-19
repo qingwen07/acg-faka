@@ -16,7 +16,7 @@ use Kernel\Annotation\Inject;
 use Kernel\Annotation\Interceptor;
 use Kernel\Exception\JSONException;
 
-#[Interceptor([Waf::class, Interceptor::TYPE_API)]
+#[Interceptor(Waf::class, Interceptor::TYPE_API)]
 class Dify extends User
 {
     #[Inject]
