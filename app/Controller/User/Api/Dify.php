@@ -33,7 +33,12 @@ class Dify extends User
         $queryTemplateEntity->setLimit(1);
         $queryTemplateEntity->setWhere($map);
         $data = $this->query->findTemplateAll($queryTemplateEntity)->toArray();
-        $json = $this->json(200, null, $data);
+        if (count($data) > 0) {
+            $json = $this->json(200, null, $data[0]);
+        } else {
+            $json = $this->json(200, null, null);
+        }
+        
         
         return $json;
     }
