@@ -17,7 +17,7 @@ use Kernel\Annotation\Interceptor;
 use Kernel\Exception\JSONException;
 
 #[Interceptor([Waf::class, Business::class], Interceptor::TYPE_API)]
-class Card extends User
+class Dify extends User
 {
     #[Inject]
     private Query $query;
