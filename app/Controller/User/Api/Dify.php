@@ -53,13 +53,12 @@ class Dify extends User
         $queryTemplateEntity->setWhere($map);
         $data = $this->query->findTemplateAll($queryTemplateEntity)->toArray();
         if (count($data) > 0) {
-            $note = intval($data[0]['note']);
-            $note -= 1;
+            $note = intval($data[0]['note']) - 1;
             
             \App\Model\Card::query()->where('secret', $secret)->whereRaw("status=1")->update(['note' => strval($note)]);
             return $this->json(200, 'success');
         } else {
-            return $this->json(200, 'secret not found');
+            return $this->json(201, 'secret not found');
         }
         
     }
